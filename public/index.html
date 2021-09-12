@@ -47,8 +47,8 @@
         socket.on('connect', () => {
             socket.emit('watcher');
         })
-        socket.on('broadcaster', () => {
-            socket.emit('watcher')
+        socket.on('broadcast', () => {
+            socket.emit('watcher');
         })
         window.onunload = window.onbeforeunload = () => {
             socket.close();

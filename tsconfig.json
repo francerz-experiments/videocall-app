@@ -1,0 +1,11 @@
+// tsconfig.json
+{
+    "compilerOptions": {
+        "module": "CommonJS",
+        "lib": ["ES5", "DOM"],
+        "rootDir": "client/ts"
+    },
+    "exclude": [
+        "server/**/*.ts"
+    ]
+}

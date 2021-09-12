@@ -10,7 +10,9 @@ const io = new Server(server);
 
 // Launch HTTP Server
 app.use(express.static('public'));
-server.listen(httpPort, () => console.log(`Listening on http://localhost:${httpPort}`));
+server.listen(httpPort,
+    () => console.log(`Open http://localhost:${httpPort}/server.html and http://localhost:${httpPort}`)
+);
  
 // ------------------------------------
 // Launch TURN server
@@ -24,9 +26,9 @@ turnServer.start();
 // ------------------------------------
 let broadcaster;
 io.sockets.on('connection', socket => {
-    socket.on('broadcaster', () => {
+    socket.on('broadcast', () => {
         broadcaster = socket.id;
-        socket.broadcast.emit('broadcaster');
+        socket.broadcast.emit('broadcast');
     });
     socket.on('watcher', () => {
         socket.to(broadcaster).emit('watcher', socket.id);

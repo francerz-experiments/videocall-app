@@ -1,16 +1,7 @@
 const
     gulp    = require('gulp'),
-    ts      = require('gulp-typescript'),
+    tsc      = require('gulp-typescript'),
     sass    = require('gulp-sass')(require('sass'));
-
-gulp.task('tsc', function() {
-    return gulp
-        .src('client/ts/**/*.ts')
-        .pipe(ts({
-            outFile: 'script.js'
-        }))
-        .pipe(gulp.dest('public/assets'));
-});
 
 gulp.task('sass', function() {
     return gulp
@@ -20,15 +11,15 @@ gulp.task('sass', function() {
 });
 
 gulp.task('watch', function() {
-    gulp.watch('client/ts/**/*.ts', gulp.series('tsc'));
     gulp.watch('client/sass/**/*.scss', gulp.series('sass'));
+    gulp.watch('server/**/*.ts', gulp.series('tsc:app'));
 });
 
 gulp.task('tsc:app', function() {
     return gulp
         .src('server/**/*.ts')
-        .pipe(ts({outFile: 'app.js'}))
-        .pipe(gulp.dest('.'));
+        .pipe(tsc())
+        .pipe(gulp.dest('app'));
 });
 
-gulp.task('build', gulp.parallel('tsc:app','tsc','sass'));
+gulp.task('build', gulp.parallel('tsc:app','sass'));
