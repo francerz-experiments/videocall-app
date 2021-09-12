@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="/socket.io/socket.io.js"></script>
+    <title>Video call app</title>
+</head>
+<body>
+    <div>
+        <button id="btnStart">Start stream</button>
+    </div>
+    <video id="videoCamera" autoplay muted></video>
+    <script>
+        const socket = io();
+        const iceConfig = {
+            iceServers: [
+                { urls: "turn:localhost:3478", username:"user", credential: "pswd" }
+            ]
+        };
+        const btnStart = document.getElementById('btnStart');
+        const videoCamera = document.getElementById('videoCamera');
+        videoCamera.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+        btnStart.addEventListener('click', async function() {
+            try {
+                let stream = await navigator.mediaDevices.getUserMedia({video: true, audio: true});
+                // stream = await navigator.mediaDevices.getDisplayMedia({video:true, audio:true});
+                videoCamera.srcObject = stream;
+                socket.emit('broadcaster');
+            } catch (err) {
+                console.error(err);
+            }
+        });
+
+        let peerConnections = {}
+        socket.on('watcher', id => {
+            const peerConnection = new RTCPeerConnection(iceConfig);
+            peerConnections[id] = peerConnection;
+
+            let stream = videoCamera.srcObject;
+            stream.getTracks().forEach(track => peerConnection.addTrack(track, stream))
+
+            peerConnection.onicecandidate = event => {
+                if (event.candidate) {
+                    socket.emit("candidate", id, event.candidate);
+                }
+            }
+
+            peerConnection.createOffer()
+                .then(sdp => peerConnection.setLocalDescription(sdp))
+                .then(() => socket.emit('offer', id, peerConnection.localDescription))
+        })
+
+        socket.on('answer', (id, description) => {
+            peerConnections[id].setRemoteDescription(description)
+        })
+
+        socket.on('candidate', (id, candidate) => {
+            peerConnections[id].addIceCandidate(new RTCIceCandidate(candidate))
+        })
+
+        socket.on('disconnectPeer', id => {
+            peerConnections[id].close()
+            delete peerConnections[id]
+        })
+
+        window.onunload = window.onbeforeunload = () => {
+            socket.close()
+        }
+    </script>
+</body>
+</html>
