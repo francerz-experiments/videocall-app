@@ -5,14 +5,14 @@ import MediaWatcher from './MediaWatcher';
 const socket = io(document.location.origin);
 const rtcConfig:RTCConfiguration = {
     iceServers: [{
-        urls: [
-            'stun:stun.l.google.com:19302',
-            'stun:stun.services.mozilla.com',
-            'stun:stun.skyway.io:3478'
-        ]
-        // urls: `turn:${window.location.hostname}:3478`,
-        // username: 'user',
-        // credential: 'pswd'
+        // urls: [
+        //     'stun:stun.l.google.com:19302',
+        //     'stun:stun.services.mozilla.com',
+        //     'stun:stun.skyway.io:3478'
+        // ]
+        urls: `turn:numb.viagenie.ca`,
+        username: 'webrtc@live.com',
+        credential: 'muazkh'
     }]
 };
 
