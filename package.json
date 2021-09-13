@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "description": "Video call app experiment",
   "scripts": {
-    "start": "node app/app.js",
-    "debug:app": "nodemon app/app.js",
+    "start": "node ./app/app.js",
+    "debug:app": "nodemon ./app/app.js",
     "debug:gulp": "gulp watch",
     "debug:ts": "webpack -w",
     "debug": "run-p debug:*",
