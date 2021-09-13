@@ -1,7 +1,7 @@
 import Room from "./Room";
 import SocketMediaHandler from "./SocketMediaHandler";
 
-const httpPort = process.env.HTTP_PORT ?? 3000;
+const httpPort = process.env.PORT ?? 3000;
 const turnPort = process.env.TURN_PORT ?? 3478;
 
 const express = require('express');
