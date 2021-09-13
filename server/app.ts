@@ -1,3 +1,6 @@
+import Room from "./Room";
+import SocketMediaHandler from "./SocketMediaHandler";
+
 const httpPort = process.env.HTTP_PORT ?? 3000;
 const turnPort = process.env.TURN_PORT ?? 3478;
 
@@ -24,26 +27,13 @@ const turnServer = new nodeTurn({
 turnServer.start();
 
 // ------------------------------------
-let broadcaster;
+let room = new Room();
 io.sockets.on('connection', socket => {
-    socket.on('broadcast', () => {
-        broadcaster = socket.id;
-        socket.broadcast.emit('broadcast');
-    });
-    socket.on('watcher', () => {
-        socket.to(broadcaster).emit('watcher', socket.id);
-    });
-    socket.on('disconnect', () => {
-        socket.to(broadcaster).emit('disconnectPeer', socket.id);
-    });
-    socket.on('offer', (id, message) => {
-        socket.to(id).emit('offer', socket.id, message);
-    });
-    socket.on('answer', (id, message) => {
-        socket.to(id).emit('answer', socket.id, message);
-    });
-    socket.on('candidate', (id, message) => {
-        socket.to(id).emit('candidate', socket.id, message);
-    });
+    SocketMediaHandler.handle(socket);
+    // media sockets
+    room.join(socket);
+    // socket.on('media:disconnect', (broadcaster:string) => {
+    //     socket.to(broadcaster).emit('media:peerDisconnect', socket.id);
+    // });
 });
 
