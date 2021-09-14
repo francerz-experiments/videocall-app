@@ -22,6 +22,7 @@ server.listen(httpPort,
 const nodeTurn = require('node-turn');
 const turnServer = new nodeTurn({
     listeningPort: turnPort,
+    authMech: 'none',
     credentials: { "user":"pswd" }
 });
 turnServer.start();
