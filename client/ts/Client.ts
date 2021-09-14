@@ -4,12 +4,16 @@ import MediaWatcher from './MediaWatcher';
 
 const socket = io(document.location.origin);
 const rtcConfig:RTCConfiguration = {
-    iceServers: [{
-        urls: `turn:numb.viagenie.ca`,
-        username: 'webrtc@live.com',
-        credential: 'muazkh'
-    }]
-};
+    iceServers: [
+        { urls: 'stun:stun.l.google.com:19302' },
+        { urls:'stun:stun1.l.google.com:19302' },
+        { urls:'stun:stunserver.org' },
+        {
+            urls: `turn:numb.viagenie.ca`,
+            username: 'webrtc@live.com',
+            credential: 'muazkh'
+        }
+    ]};
 
 document.addEventListener('DOMContentLoaded', () => {
     let listVideos = document.getElementById('listVideos') as HTMLUListElement;
