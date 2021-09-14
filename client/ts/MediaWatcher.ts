@@ -25,6 +25,7 @@ export default class MediaWatcher
         this.peerConnections.get(peerID)
             ?.addIceCandidate(candidate)
             .catch(e => console.error(e));
+        console.log('media:candidate', {peerID, candidate});
     }
     private socketOnOffer(emitterID:string, description:RTCSessionDescription) {
         let peerConnection = new RTCPeerConnection(this.rtcConfig);
@@ -42,12 +43,16 @@ export default class MediaWatcher
         peerConnection.onicecandidate = event => {
             if (event.candidate) {
                 this.socket.emit('media:candidate', emitterID, event.candidate);
+                console.log('media:candidate', {emitterID, candidate:event.candidate});
             }
         }
         peerConnection
             .setRemoteDescription(description)
             .then(() => peerConnection.createAnswer())
             .then(sdp => peerConnection.setLocalDescription(sdp))
-            .then(() => this.socket.emit('media:answer', emitterID, peerConnection.localDescription));
+            .then(() => {
+                this.socket.emit('media:answer', emitterID, peerConnection.localDescription);
+                console.log('media:answer', {emitterID, description:peerConnection.localDescription});
+            });
     }
 }
