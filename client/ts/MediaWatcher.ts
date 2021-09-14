@@ -23,7 +23,7 @@ export default class MediaWatcher
     }
     private socketOnCandidate(peerID:string, candidate:RTCIceCandidateInit) {
         this.peerConnections.get(peerID)
-            ?.addIceCandidate(new RTCIceCandidate(candidate))
+            ?.addIceCandidate(candidate)
             .catch(e => console.error(e));
     }
     private socketOnOffer(emitterID:string, description:RTCSessionDescription) {

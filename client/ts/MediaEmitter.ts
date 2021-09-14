@@ -29,8 +29,8 @@ export default class MediaEmitter
         console.log('peerConnection.onicecandidate');
         peerConnection.onicecandidate = event => {
             if (event.candidate) {
-                this.socket.emit('media:candidate', watcherID, peerConnection.localDescription);
-                console.log('media:candidate', {watcherID, description: peerConnection.localDescription});
+                this.socket.emit('media:candidate', watcherID, event.candidate);
+                console.log('media:candidate', {watcherID, description: event.candidate});
             }
         };
 
@@ -49,7 +49,7 @@ export default class MediaEmitter
     }
 
     private socketOnCandidate(watcherID:string, candidate:RTCIceCandidate) {
-        this.peerConnections.get(watcherID)?.addIceCandidate(new RTCIceCandidate(candidate))
+        this.peerConnections.get(watcherID)?.addIceCandidate(candidate)
     }
 
     private socketOnDisconnectPeer(peerID:string) {
