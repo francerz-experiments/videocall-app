@@ -50,6 +50,7 @@ export default class MediaEmitter
 
     private socketOnCandidate(watcherID:string, candidate:RTCIceCandidate) {
         this.peerConnections.get(watcherID)?.addIceCandidate(candidate)
+        console.log('watch:candidate', {watcherID, candidate});
     }
 
     private socketOnDisconnectPeer(peerID:string) {
