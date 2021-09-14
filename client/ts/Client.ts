@@ -5,7 +5,7 @@ import MediaWatcher from './MediaWatcher';
 const socket = io(document.location.origin);
 const rtcConfig:RTCConfiguration = {
     iceServers: [
-        { urls: 'stun:stun.l.google.com:19302' },
+        { urls:'stun:stun.l.google.com:19302' },
         { urls:'stun:stun1.l.google.com:19302' },
         { urls:'stun:stunserver.org' },
         {

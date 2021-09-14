@@ -30,17 +30,22 @@ export default class MediaEmitter
         peerConnection.onicecandidate = event => {
             if (event.candidate) {
                 this.socket.emit('media:candidate', watcherID, peerConnection.localDescription);
+                console.log('media:candidate', {watcherID, description: peerConnection.localDescription});
             }
         };
 
         console.log('peerConnection.createOffer()');
         peerConnection.createOffer()
             .then(sdp => peerConnection.setLocalDescription(sdp))
-            .then(() => this.socket.emit('media:offer', watcherID, peerConnection.localDescription));
+            .then(() => {
+                this.socket.emit('media:offer', watcherID, peerConnection.localDescription);
+                console.log('media:offer', { watcherID, description: peerConnection.localDescription });
+            });
     }
 
     private socketOnAnswer(watcherID:string, description:RTCSessionDescription) {
         this.peerConnections.get(watcherID)?.setRemoteDescription(description);
+        console.log('media:answer', { watcherID, description });
     }
 
     private socketOnCandidate(watcherID:string, candidate:RTCIceCandidate) {
